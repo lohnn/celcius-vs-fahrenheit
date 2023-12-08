@@ -15,8 +15,8 @@ class Arrow extends Component {
   @override
   void render(Canvas canvas) {
     canvas.drawLine(fromPos.toOffset(), toPos.toOffset(), arrowPaint);
-    const scale = 50.0;
     final delta = toPos - fromPos;
+    final scale = log(delta.length) * 4;
     final unitvector = delta.normalized();
     Matrix2 rotationMat1 = Matrix2.rotation(45 * (pi / 180));
     Matrix2 rotationMat2 = Matrix2.rotation(-45 * (pi / 180));
