@@ -68,10 +68,10 @@ class Universe extends World with DragCallbacks {
   Future<void> onLoad() async {
     super.onLoad();
 
-    final neutralCoordinates = <(int, int)>[
-      (80, 120),
-      (150, 100),
-      (300, 120),
+    final neutralCoordinates = <(double, double, int)>[
+      (80, 120, 50),
+      (150, 100, 75),
+      (300, 120, 100),
     ];
 
     planets = [
@@ -80,20 +80,20 @@ class Universe extends World with DragCallbacks {
         position: Vector2(150, 150),
       ),
       NeutralPlanet(
-        population: 100,
+        population: 120,
         position: Vector2(0, 0),
       ),
       for (final coordinate in neutralCoordinates)
         NeutralPlanet(
-          population: 100,
+          population: coordinate.$3,
           position: Vector2(coordinate.$1 - 200, coordinate.$2 - 200),
         ),
       for (final coordinate in neutralCoordinates)
         NeutralPlanet(
-          population: 100,
+          population: coordinate.$3,
           position: Vector2(
-            200 - coordinate.$1.toDouble(),
-            200 - coordinate.$2.toDouble(),
+            200 - coordinate.$1,
+            200 - coordinate.$2,
           ),
         ),
       IcePlanet(
