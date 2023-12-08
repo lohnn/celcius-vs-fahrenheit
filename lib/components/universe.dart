@@ -12,11 +12,11 @@ class Universe extends World with DragCallbacks {
   void onDragStart(DragStartEvent event) {
     super.onDragStart(event);
     if (currentArrow != null) return;
-    if (componentsAtPoint(event.canvasPosition)
+    if (componentsAtPoint(event.localPosition)
             .whereType<FirePlanet>()
             .firstOrNull
         case final fromPlanet?) {
-      final arrow = Arrow(fromPos: event.canvasPosition);
+      final arrow = Arrow(fromPos: event.localPosition);
       currentArrow = (
         arrow: arrow,
         fromPlanet: fromPlanet,
@@ -34,7 +34,6 @@ class Universe extends World with DragCallbacks {
         .whereType<Planet>()
         .firstOrNull;
 
-    print(toWorld);
   }
 
   @override

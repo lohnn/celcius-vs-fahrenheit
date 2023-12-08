@@ -52,7 +52,6 @@ sealed class Planet extends PositionComponent with HasWorldReference<Universe> {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    debugMode = true;
     final newSize = sqrt(population);
     size = Vector2(newSize, newSize) * 3;
   }

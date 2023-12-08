@@ -9,7 +9,7 @@ class Arrow extends Component {
   Paint arrowPaint = BasicPalette.blue.paint();
   Arrow({
     required this.fromPos,
-  }) : toPos = fromPos;
+  }) : toPos = fromPos.clone();
 
   @override
   void render(Canvas canvas) {
