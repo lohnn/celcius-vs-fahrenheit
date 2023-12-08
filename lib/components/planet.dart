@@ -5,24 +5,15 @@ import 'package:flame/palette.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gj23/main.dart';
 
-enum Possession {
-  none,
-  fire,
-  ice,
+enum AnimationState {
+  idle,
+  shooting,
+  growing,
+  hit,
+  dying,
+  won,
   ;
-
-  static final _paint = BasicPalette.white.paint();
-  static final _icePaint = BasicPalette.blue.paint();
-  static final _firePaint = BasicPalette.red.paint();
-
-  Paint get paint => switch (this) {
-        none => _paint,
-        fire => _firePaint,
-        ice => _icePaint,
-      };
 }
-
-enum AnimationState { idle, shooting, growing, hit, dying, won }
 
 sealed class Planet extends PositionComponent with HasGameRef<MyGame> {
   int population;
