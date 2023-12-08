@@ -4,6 +4,7 @@ import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/rendering.dart';
+import 'package:gj23/components/arrow.dart';
 import 'package:gj23/main.dart';
 
 enum AnimationState {
@@ -46,8 +47,6 @@ sealed class Planet extends PositionComponent with HasGameRef<MyGame> {
   }
 }
 
-class Arrow extends PositionComponent {}
-
 class FirePlanet extends Planet with DragCallbacks {
   FirePlanet({
     required super.population,
@@ -58,7 +57,7 @@ class FirePlanet extends Planet with DragCallbacks {
   @override
   void onDragStart(DragStartEvent event) {
     if (currentArrow != null) return;
-    currentArrow = Arrow();
+    currentArrow = Arrow(fromPos: event.canvasPosition);
   }
 
   @override
