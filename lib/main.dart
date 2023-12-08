@@ -1,3 +1,4 @@
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:gj23/components/universe.dart';
@@ -7,6 +8,14 @@ void main() {
 }
 
 class MyGame extends FlameGame {
+  MyGame()
+      : super(
+          camera: CameraComponent.withFixedResolution(
+            width: 400,
+            height: 400,
+          ),
+        );
+
   @override
   Future<void> onLoad() async {
     world = Universe();

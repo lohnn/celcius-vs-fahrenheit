@@ -42,6 +42,7 @@ class Universe extends World with DragCallbacks {
         currentToPlanet = toPlanet;
         currentArrow.arrow.toPos.setFrom(toPlanet.center);
       } else {
+        currentToPlanet = null;
         currentArrow.arrow.toPos.setFrom(event.localEndPosition);
       }
     }
@@ -68,22 +69,37 @@ class Universe extends World with DragCallbacks {
   Future<void> onLoad() async {
     super.onLoad();
 
+    final neutralCoordinates = <(double, double, int)>[
+      (80, 120, 50),
+      (150, 100, 75),
+      (300, 120, 100),
+    ];
+
     planets = [
       FirePlanet(
         population: 100,
-        position: Vector2(100, 200),
+        position: Vector2(150, 150),
       ),
       NeutralPlanet(
-        population: 100,
-        position: Vector2(-100, 200),
+        population: 120,
+        position: Vector2(0, 0),
       ),
-      NeutralPlanet(
-        population: 100,
-        position: Vector2(200, 100),
-      ),
+      for (final coordinate in neutralCoordinates)
+        NeutralPlanet(
+          population: coordinate.$3,
+          position: Vector2(coordinate.$1 - 200, coordinate.$2 - 200),
+        ),
+      for (final coordinate in neutralCoordinates)
+        NeutralPlanet(
+          population: coordinate.$3,
+          position: Vector2(
+            200 - coordinate.$1,
+            200 - coordinate.$2,
+          ),
+        ),
       IcePlanet(
         population: 100,
-        position: Vector2(-200, 100),
+        position: Vector2(-150, -150),
       ),
     ];
 
