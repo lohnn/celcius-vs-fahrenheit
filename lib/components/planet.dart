@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gj23/main.dart';
@@ -19,6 +20,8 @@ sealed class Planet extends PositionComponent with HasGameRef<MyGame> {
   int population;
 
   Paint get paint;
+
+  final roundArrows = <Arrow>[];
 
   Planet({
     required this.population,
@@ -43,11 +46,27 @@ sealed class Planet extends PositionComponent with HasGameRef<MyGame> {
   }
 }
 
-class FirePlanet extends Planet {
+class Arrow extends PositionComponent {}
+
+class FirePlanet extends Planet with DragCallbacks {
   FirePlanet({
     required super.population,
     super.position,
   });
+
+  Arrow? currentArrow;
+  @override
+  void onDragStart(DragStartEvent event) {
+    if (currentArrow != null) return;
+    currentArrow = Arrow();
+  }
+
+  @override
+  void onDragEnd(DragEndEvent event) {
+    super.onDragEnd(event);
+    // TODO; Add fight logic
+    currentArrow?.removeFromParent();
+  }
 
   @override
   Paint get paint => BasicPalette.red.paint();
