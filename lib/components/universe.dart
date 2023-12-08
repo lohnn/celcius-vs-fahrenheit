@@ -12,6 +12,7 @@ class Universe extends World {
       Planet(
         population: 100,
         position: Vector2(100, 200),
+        possession: Possession.fire,
       ),
       Planet(
         population: 100,
@@ -24,6 +25,7 @@ class Universe extends World {
       Planet(
         population: 100,
         position: Vector2(-200, 100),
+        possession: Possession.ice,
       ),
     ];
 
