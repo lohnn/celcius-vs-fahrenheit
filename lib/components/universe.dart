@@ -42,6 +42,7 @@ class Universe extends World with DragCallbacks {
         currentToPlanet = toPlanet;
         currentArrow.arrow.toPos.setFrom(toPlanet.center);
       } else {
+        currentToPlanet = null;
         currentArrow.arrow.toPos.setFrom(event.localEndPosition);
       }
     }
