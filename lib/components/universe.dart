@@ -9,23 +9,21 @@ class Universe extends World {
     super.onLoad();
 
     planets = [
-      Planet(
+      FirePlanet(
         population: 100,
         position: Vector2(100, 200),
-        possession: Possession.fire,
       ),
-      Planet(
+      NeutralPlanet(
         population: 100,
         position: Vector2(-100, 200),
       ),
-      Planet(
+      NeutralPlanet(
         population: 100,
         position: Vector2(200, 100),
       ),
-      Planet(
+      IcePlanet(
         population: 100,
         position: Vector2(-200, 100),
-        possession: Possession.ice,
       ),
     ];
 

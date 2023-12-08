@@ -22,13 +22,15 @@ enum Possession {
       };
 }
 
-class Planet extends PositionComponent with HasGameRef<MyGame> {
+enum AnimationState { idle, shooting, growing, hit, dying, won }
+
+sealed class Planet extends PositionComponent with HasGameRef<MyGame> {
   int population;
-  Possession possession;
+
+  Paint get paint;
 
   Planet({
     required this.population,
-    this.possession = Possession.none,
     super.position,
   }) : super(anchor: Anchor.center);
 
@@ -37,10 +39,48 @@ class Planet extends PositionComponent with HasGameRef<MyGame> {
     c.drawCircle(
       Offset.zero,
       sqrt(population),
-      possession.paint,
+      paint,
     );
   }
 
   @override
   void update(double dt) {}
+
+  @override
+  Future<void> onLoad() async {
+    super.onLoad();
+  }
+}
+
+class FirePlanet extends Planet {
+  FirePlanet({
+    required super.population,
+    super.position,
+  });
+
+  @override
+  // TODO: implement paint
+  Paint get paint => BasicPalette.red.paint();
+}
+
+class IcePlanet extends Planet {
+  IcePlanet({
+    required super.population,
+    super.position,
+  });
+
+  @override
+  // TODO: implement paint
+  Paint get paint => BasicPalette.blue.paint();
+}
+
+class NeutralPlanet extends Planet {
+  NeutralPlanet({
+    required super.population,
+    super.position,
+  });
+
+  @override
+  // TODO: implement paint
+  Paint get paint => BasicPalette.gray.paint();
 }
