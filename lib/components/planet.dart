@@ -50,7 +50,6 @@ class FirePlanet extends Planet {
   });
 
   @override
-  // TODO: implement paint
   Paint get paint => BasicPalette.red.paint();
 }
 
@@ -61,7 +60,6 @@ class IcePlanet extends Planet {
   });
 
   @override
-  // TODO: implement paint
   Paint get paint => BasicPalette.blue.paint();
 }
 
@@ -72,6 +70,5 @@ class NeutralPlanet extends Planet {
   });
 
   @override
-  // TODO: implement paint
   Paint get paint => BasicPalette.gray.paint();
 }
