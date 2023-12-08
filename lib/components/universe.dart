@@ -11,15 +11,19 @@ class Universe extends World {
     planets = [
       Planet(
         population: 100,
+        position: Vector2(100, 200),
       ),
       Planet(
         population: 100,
+        position: Vector2(-100, 200),
       ),
       Planet(
         population: 100,
+        position: Vector2(200, 100),
       ),
       Planet(
         population: 100,
+        position: Vector2(-200, 100),
       ),
     ];
 

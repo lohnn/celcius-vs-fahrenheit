@@ -11,6 +11,7 @@ class Planet extends PositionComponent with HasGameRef<MyGame> {
 
   Planet({
     required this.population,
+    super.position,
   }) : super(anchor: Anchor.center);
 
   @override
