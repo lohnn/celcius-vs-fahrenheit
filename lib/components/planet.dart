@@ -7,13 +7,11 @@ import 'package:gj23/main.dart';
 
 class Planet extends PositionComponent with HasGameRef<MyGame> {
   static final _paint = BasicPalette.white.paint();
-  var population = 100;
+  int population;
 
-  Planet()
-      : super(
-          anchor: Anchor.center,
-          size: Vector2.all(32),
-        );
+  Planet({
+    required this.population,
+  }) : super(anchor: Anchor.center);
 
   @override
   void render(Canvas c) {
