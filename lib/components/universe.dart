@@ -7,6 +7,12 @@ class Universe extends World with DragCallbacks {
   late final List<Planet> planets;
 
   ({Arrow arrow, FirePlanet fromPlanet})? currentArrow;
+  Planet? currentToPlanet;
+
+  void clearDrag() {
+    currentArrow = null;
+    currentToPlanet = null;
+  }
 
   @override
   void onDragStart(DragStartEvent event) {
@@ -28,20 +34,34 @@ class Universe extends World with DragCallbacks {
   @override
   void onDragUpdate(DragUpdateEvent event) {
     super.onDragUpdate(event);
-    currentArrow?.arrow.toPos.setFrom(event.localEndPosition);
-
-    final toWorld = componentsAtPoint(event.localEndPosition)
-        .whereType<Planet>()
-        .firstOrNull;
-
+    if (currentArrow case final currentArrow?) {
+      if (componentsAtPoint(event.localEndPosition)
+              .whereType<Planet>()
+              .firstOrNull
+          case final toPlanet? when currentArrow.fromPlanet != toPlanet) {
+        currentToPlanet = toPlanet;
+        currentArrow.arrow.toPos.setFrom(toPlanet.center);
+      } else {
+        currentArrow.arrow.toPos.setFrom(event.localEndPosition);
+      }
+    }
   }
 
   @override
   void onDragEnd(DragEndEvent event) {
     super.onDragEnd(event);
-    currentArrow?.arrow.removeFromParent();
-    currentArrow = null;
-    // TODO: Check overlaps
+
+    if (currentArrow case final currentArrow?) {
+      if (currentToPlanet case final currentToPlanet?) {
+        // TODO: Hand over the arrow to the planet
+        print(
+          'Dropping ship: ${currentArrow.fromPlanet} $currentToPlanet',
+        );
+      } else {
+        currentArrow.arrow.removeFromParent();
+      }
+    }
+    clearDrag();
   }
 
   @override
