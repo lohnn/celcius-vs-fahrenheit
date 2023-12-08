@@ -16,7 +16,7 @@ class Universe extends World with DragCallbacks {
             .whereType<FirePlanet>()
             .firstOrNull
         case final fromPlanet?) {
-      final arrow = Arrow(fromPos: event.localPosition);
+      final arrow = Arrow(fromPos: fromPlanet.center);
       currentArrow = (
         arrow: arrow,
         fromPlanet: fromPlanet,
