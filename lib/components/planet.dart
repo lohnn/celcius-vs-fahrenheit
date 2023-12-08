@@ -1,11 +1,10 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/rendering.dart';
 import 'package:gj23/components/arrow.dart';
-import 'package:gj23/main.dart';
+import 'package:gj23/components/universe.dart';
 
 enum AnimationState {
   idle,
@@ -17,23 +16,32 @@ enum AnimationState {
   ;
 }
 
-sealed class Planet extends PositionComponent with HasGameRef<MyGame> {
-  int population;
+sealed class Planet extends PositionComponent with HasWorldReference<Universe> {
+  int _population;
+
+  int get population => _population;
+
+  set population(int newValue) {
+    final newSize = sqrt(newValue);
+    size = Vector2(newSize, newSize) * 3;
+    _population = population;
+  }
 
   Paint get paint;
 
   final roundArrows = <Arrow>[];
 
   Planet({
-    required this.population,
+    required int population,
     super.position,
-  }) : super(anchor: Anchor.center);
+  })  : _population = population,
+        super(anchor: Anchor.center);
 
   @override
   void render(Canvas c) {
     c.drawCircle(
-      Offset.zero,
-      sqrt(population),
+      size.toOffset() / 2,
+      size.x / 2,
       paint,
     );
   }
@@ -44,34 +52,25 @@ sealed class Planet extends PositionComponent with HasGameRef<MyGame> {
   @override
   Future<void> onLoad() async {
     super.onLoad();
+    debugMode = true;
+    final newSize = sqrt(population);
+    size = Vector2(newSize, newSize) * 3;
   }
 }
 
-class FirePlanet extends Planet with DragCallbacks {
+interface class FightingPlanets {}
+
+class FirePlanet extends Planet implements FightingPlanets {
   FirePlanet({
     required super.population,
     super.position,
   });
 
-  Arrow? currentArrow;
-  @override
-  void onDragStart(DragStartEvent event) {
-    if (currentArrow != null) return;
-    currentArrow = Arrow(fromPos: event.canvasPosition);
-  }
-
-  @override
-  void onDragEnd(DragEndEvent event) {
-    super.onDragEnd(event);
-    // TODO; Add fight logic
-    currentArrow?.removeFromParent();
-  }
-
   @override
   Paint get paint => BasicPalette.red.paint();
 }
 
-class IcePlanet extends Planet {
+class IcePlanet extends Planet implements FightingPlanets {
   IcePlanet({
     required super.population,
     super.position,
