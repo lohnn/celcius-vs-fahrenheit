@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
 import 'package:celsius_vs_fahrenheit/components/termos.dart';
@@ -177,7 +176,7 @@ class IcePlanet extends Planet implements FightingPlanets {
   @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'IcePlanet_idle-Sheet.png',
-        AnimationState.dying: 'FirePlanet-explosion3.png',
+        AnimationState.dying: 'IcePlanet-explosion.png',
         AnimationState.birthing: 'IcePlanet_transform-Sheet.png',
       };
 }
@@ -190,7 +189,7 @@ class NeutralPlanet extends Planet {
 
   @override
   Map<AnimationState, String> get animationImages => {
-        AnimationState.dying: 'FirePlanet-explosion3.png',
+        AnimationState.dying: 'NeutralPlanet-explosion.png',
         AnimationState.idle: 'NeutralPlanet_idle-Sheet.png',
       };
 }

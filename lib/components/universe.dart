@@ -263,6 +263,7 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   }
 
   void triggerNextTurn() {
+    setIceMoves();
     for (final planet in planets) {
       planet.settleArrows();
     }
