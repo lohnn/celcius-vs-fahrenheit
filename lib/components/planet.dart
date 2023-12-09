@@ -55,18 +55,21 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   Future<void> onLoad() async {
     super.onLoad();
     population = population;
-    animations = {
-      for (final (state, asset) in animationImages.records)
-        state: await game.loadSpriteAnimation(
-          asset,
-          SpriteAnimationData.sequenced(
-            amount: 4,
-            textureSize: Vector2.all(32),
-            loop: state != AnimationState.dying,
-            stepTime: 0.3,
-          ),
-        ),
-    };
+
+    final SpriteAnimation idle = await game.loadSpriteAnimation(
+      animationImages[AnimationState.idle]!,
+      SpriteAnimationData.sequenced(
+        amount: 4,
+        textureSize: Vector2.all(32),
+        stepTime: 0.3,
+      ),
+    );
+    final SpriteAnimation dying = await game.loadSpriteAnimation(
+      animationImages[AnimationState.dying]!,
+      SpriteAnimationData.sequenced(
+          amount: 5, textureSize: Vector2.all(32), stepTime: 1.5, loop: false),
+    );
+    animations = {AnimationState.dying: dying, AnimationState.idle: idle};
   }
 
   void settleArrows() {}
@@ -122,6 +125,7 @@ class IcePlanet extends Planet implements FightingPlanets {
   @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'IcePlanet_idle-Sheet.png',
+        AnimationState.dying: 'FirePlanet-explosion.png',
         AnimationState.birthing: 'IcePlanet_transform-Sheet.png',
       };
 }
@@ -134,6 +138,7 @@ class NeutralPlanet extends Planet {
 
   @override
   Map<AnimationState, String> get animationImages => {
+        AnimationState.dying: 'FirePlanet-explosion.png',
         AnimationState.idle: 'NeutralPlanet_idle-Sheet.png',
       };
 }
