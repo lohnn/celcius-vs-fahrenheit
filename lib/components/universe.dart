@@ -170,6 +170,7 @@ class Universe extends World with DragCallbacks {
   void triggerNextTurn() {
     const threshold = 5;
     const growthRate = 1.25;
+    final newPlanets = <Planet>[];
 
     for (final planet in planets) {
       planet.settleArrows();
@@ -186,20 +187,25 @@ class Universe extends World with DragCallbacks {
       if (planet.runtimeType == NeutralPlanet) {
         final newPopulation = planet.population - invadorForce;
         if (newPopulation < threshold) {
-          newPlanet(invadorType, planet, newPopulation.abs());
+          newPlanets.add(newPlanet(invadorType, planet, newPopulation.abs()));
         } else {
+          print("new population ${planet.population}");
           planet.population = newPopulation;
         }
       } else if (planet.runtimeType != invadorType) {
         final newPopulation = planet.population - invadorForce;
         if (newPopulation < 0) {
-          newPlanet(invadorType, planet, newPopulation.abs());
+          newPlanets.add(newPlanet(invadorType, planet, newPopulation.abs()));
         } else {
           planet.population = newPopulation;
         }
       } else if (planet.runtimeType == invadorType) {
         planet.population = planet.population + invadorForce;
       }
+    }
+
+    for (final planet in newPlanets) {
+      add(planet);
     }
 
     for (final planet in planets) {
@@ -210,6 +216,7 @@ class Universe extends World with DragCallbacks {
 
     for (final planet in planets) {
       planet.population = (planet.population * growthRate).round();
+
       for (final arrow in planet.targetPlanets.values) {
         arrow.removeFromParent();
       }
@@ -217,34 +224,24 @@ class Universe extends World with DragCallbacks {
     }
   }
 
-  void newPlanet(Type planetType, Planet old, int population0) {
+  Planet newPlanet(Type planetType, Planet old, int population0) {
     int population = max(population0, 15);
-    switch (planetType) {
-      case FirePlanet:
-        print('adding fire planet $population ${old.position}');
-        add(
-          FirePlanet(
-            population: population,
-            position: old.position,
-          ),
-        );
-      case IcePlanet:
-        print('adding fire planet');
-        add(
-          IcePlanet(
-            population: population,
-            position: old.position,
-          ),
-        );
-      case NeutralPlanet:
-        print('adding fire planet');
-        add(
-          NeutralPlanet(
-            population: population,
-            position: old.position,
-          ),
-        );
-    }
+    Vector2 position = old.position;
     old.removeFromParent();
+
+    return switch (planetType) {
+      FirePlanet => FirePlanet(
+          population: population,
+          position: position,
+        ),
+      IcePlanet => IcePlanet(
+          population: population,
+          position: position,
+        ),
+      _ => NeutralPlanet(
+          population: population,
+          position: position,
+        ),
+    };
   }
 }
