@@ -26,7 +26,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   set population(int newValue) {
     final radius = sqrt(newValue / pi);
     size = Vector2(radius, radius) * 7;
-    _population = population;
+    _population = newValue;
   }
 
   final targetPlanets = <Planet, Arrow>{};
@@ -85,6 +85,7 @@ class FirePlanet extends Planet implements FightingPlanets {
     for (final (planet, arrow) in targetPlanets.records) {
       planet.firePopulation = planet.firePopulation + settlerForce;
     }
+    population = settlerForce;
   }
 
   @override
@@ -106,6 +107,7 @@ class IcePlanet extends Planet implements FightingPlanets {
     for (final (planet, arrow) in targetPlanets.records) {
       planet.icePopulation = planet.icePopulation + settlerForce;
     }
+    population = settlerForce;
   }
 
   @override

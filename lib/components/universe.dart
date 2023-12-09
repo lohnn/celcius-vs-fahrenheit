@@ -223,8 +223,9 @@ class Universe extends World with DragCallbacks {
     }
 
     for (final planet in planets) {
-      planet.population = (planet.population * growthRate).round();
-
+      if (planet.runtimeType != NeutralPlanet) {
+        planet.population = (planet.population * growthRate).round();
+      }
       for (final arrow in planet.targetPlanets.values) {
         arrow.removeFromParent();
       }
