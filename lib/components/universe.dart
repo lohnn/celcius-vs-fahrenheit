@@ -249,7 +249,7 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
       final fallang = <Planet>[];
       for (final attacker in attackers) {
         if (!actingPlanets.contains(attacker)) {
-          possibleForce += (attacker.population / 2).round();
+          possibleForce += (attacker.population / 1.5).round();
           fallang.add(attacker);
         }
         if (possibleForce / 2 > targetPop) {
