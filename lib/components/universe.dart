@@ -178,7 +178,7 @@ class Universe extends World with DragCallbacks {
   void triggerNextTurn() {
     const threshold = 5;
     const growthRate = 1.25;
-    final newPlanets = <Planet>[];
+    final newPlanets = <(Planet, Planet)>[];
 
     for (final planet in planets) {
       planet.settleArrows();
@@ -196,14 +196,16 @@ class Universe extends World with DragCallbacks {
       if (planet.runtimeType == NeutralPlanet) {
         final newPopulation = planet.population - invadorForce;
         if (newPopulation < threshold) {
-          newPlanets.add(newPlanet(invadorType, planet, newPopulation.abs()));
+          newPlanets.add(
+              (planet, newPlanet(invadorType, planet, newPopulation.abs())));
         } else {
           planet.population = newPopulation;
         }
       } else if (planet.runtimeType != invadorType) {
         final newPopulation = planet.population - invadorForce;
         if (newPopulation < 0) {
-          newPlanets.add(newPlanet(invadorType, planet, newPopulation.abs()));
+          newPlanets.add(
+              (planet, newPlanet(invadorType, planet, newPopulation.abs())));
         } else {
           planet.population = newPopulation;
         }
@@ -212,14 +214,15 @@ class Universe extends World with DragCallbacks {
       }
     }
 
-    for (final planet in newPlanets) {
-      add(planet);
-    }
-
     for (final planet in planets) {
       if (planet.population < threshold) {
-        newPlanet(NeutralPlanet, planet, planet.population);
+        newPlanets
+            .add((planet, newPlanet(NeutralPlanet, planet, planet.population)));
       }
+    }
+    for (final (old, newP) in newPlanets) {
+      old.removeFromParent();
+      add(newP);
     }
 
     for (final planet in planets) {
@@ -235,7 +238,6 @@ class Universe extends World with DragCallbacks {
   Planet newPlanet(Type planetType, Planet old, int population0) {
     int population = max(population0, 15);
     Vector2 position = old.position;
-    old.removeFromParent();
 
     return switch (planetType) {
       FirePlanet => FirePlanet(
