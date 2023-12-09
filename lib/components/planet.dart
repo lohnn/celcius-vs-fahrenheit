@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
 import 'package:celsius_vs_fahrenheit/main.dart';
@@ -9,7 +11,7 @@ enum AnimationState {
 //  growing,
 //  hit,
 //  dying,
-//  won,
+  birthing,
   ;
 }
 
@@ -18,9 +20,12 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   int _population;
 
   int get population => _population;
+  int firePopulation;
+  int icePopulation;
 
   set population(int newValue) {
-    size = Vector2(newValue.toDouble(), newValue.toDouble()) * 0.5;
+    final radius = sqrt(newValue / pi);
+    size = Vector2(radius, radius) * 7;
     _population = population;
   }
 
@@ -30,8 +35,10 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
 
   Planet({
     required int population,
-    super.position,
+    required super.position,
   })  : _population = population,
+        firePopulation = 0,
+        icePopulation = 0,
         super(anchor: Anchor.center, current: AnimationState.idle);
 
   void startTargeting(Planet targetPlanet, Arrow arrow) {
@@ -59,6 +66,8 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
         ),
     };
   }
+
+  void settleArrows() {}
 }
 
 interface class FightingPlanets {}
@@ -68,6 +77,15 @@ class FirePlanet extends Planet implements FightingPlanets {
     required super.population,
     super.position,
   });
+
+  @override
+  void settleArrows() {
+    final nPlanets = targetPlanets.length;
+    final settlerForce = (population / (nPlanets + 1)).round();
+    for (final (planet, arrow) in targetPlanets.records) {
+      planet.firePopulation = planet.firePopulation + settlerForce;
+    }
+  }
 
   @override
   Map<AnimationState, String> get animationImages => {
@@ -82,8 +100,18 @@ class IcePlanet extends Planet implements FightingPlanets {
   });
 
   @override
+  void settleArrows() {
+    final nPlanets = targetPlanets.length;
+    final settlerForce = (population / (nPlanets + 1)).round();
+    for (final (planet, arrow) in targetPlanets.records) {
+      planet.icePopulation = planet.icePopulation + settlerForce;
+    }
+  }
+
+  @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'IcePlanet_idle-Sheet.png',
+        AnimationState.birthing: 'IcePlanet_transform-Sheet.png',
       };
 }
 
