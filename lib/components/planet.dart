@@ -95,6 +95,6 @@ class NeutralPlanet extends Planet {
 
   @override
   Map<AnimationState, String> get animationImages => {
-        AnimationState.idle: 'FirePlanet_idle-Sheet.png',
+        AnimationState.idle: 'NeutralPlanet_idle-Sheet.png',
       };
 }
