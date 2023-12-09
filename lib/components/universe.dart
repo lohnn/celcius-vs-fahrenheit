@@ -187,6 +187,76 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
     }
   }
 
+  void setIceMoves() {
+    final withinRange = <Planet>[];
+    final allTargets = <Planet, List<Planet>>{};
+    final actingPlanets = <Planet>[];
+
+    bool reinforce(Planet currentPlanet, List<Planet> possibleTargets) {
+      var allFriends = true;
+      for (final otherPlanet in possibleTargets) {
+        if (otherPlanet is! IcePlanet) {
+          allFriends = false;
+          break;
+        }
+      }
+      if (currentPlanet.population > 300 && allFriends) {
+        for (final otherPlanet in possibleTargets) {
+          currentPlanet.targetPlanets[otherPlanet] =
+              Arrow(fromPos: Vector2(0, 0));
+        }
+        return true;
+      }
+      return false;
+    }
+
+    for (final planet in planets) {
+      if (planet is IcePlanet) {
+        for (final otherPlanet in planets) {
+          if (otherPlanet != planet &&
+              (planet.position - otherPlanet.position).length < 150) {
+            withinRange.add(otherPlanet);
+            if (otherPlanet is! IcePlanet) {
+              allTargets.update(
+                otherPlanet,
+                (value) => value..add(planet),
+                ifAbsent: () => [planet],
+              );
+            }
+          }
+        }
+        if (!reinforce(planet, withinRange)) {
+          for (final target in withinRange) {
+            if (target.population < planet.population / 2 &&
+                target is! IcePlanet) {
+              planet.targetPlanets[target] = Arrow(fromPos: Vector2(0, 0));
+              actingPlanets.add(planet);
+              break;
+            }
+          }
+        }
+      }
+    }
+    for (final (target, attackers) in allTargets.records) {
+      final targetPop = target.population;
+      var possibleForce = 0;
+      final fallang = <Planet>[];
+      for (final attacker in attackers) {
+        if (!actingPlanets.contains(attacker)) {
+          possibleForce += (attacker.population / 2).round();
+          fallang.add(attacker);
+        }
+        if (possibleForce / 2 > targetPop) {
+          for (final attackingPlanet in fallang) {
+            attackingPlanet.targetPlanets[target] =
+                Arrow(fromPos: Vector2(0, 0));
+            actingPlanets.add(attackingPlanet);
+          }
+        }
+      }
+    }
+  }
+
   void triggerNextTurn() {
     for (final planet in planets) {
       planet.settleArrows();
