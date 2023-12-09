@@ -65,6 +65,9 @@ class Universe extends World with DragCallbacks {
     clearDrag();
   }
 
+  static const _basePlanetStartPopulation = 200;
+  static const _centrePlanetStartPopulation = 150;
+
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -77,11 +80,11 @@ class Universe extends World with DragCallbacks {
 
     planets = [
       FirePlanet(
-        population: 100,
+        population: _basePlanetStartPopulation,
         position: Vector2(150, 150),
       ),
       NeutralPlanet(
-        population: 120,
+        population: _centrePlanetStartPopulation,
         position: Vector2(0, 0),
       ),
       for (final coordinate in neutralCoordinates)
@@ -98,7 +101,7 @@ class Universe extends World with DragCallbacks {
           ),
         ),
       IcePlanet(
-        population: 100,
+        population: _basePlanetStartPopulation,
         position: Vector2(-150, -150),
       ),
     ];
