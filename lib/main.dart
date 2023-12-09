@@ -1,14 +1,34 @@
+import 'dart:math';
+
 import 'package:celsius_vs_fahrenheit/components/universe.dart';
+import 'package:celsius_vs_fahrenheit/handler/audio_handler.dart';
+import 'package:celsius_vs_fahrenheit/screens/end_screen.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-import 'components/victory_screen.dart';
-import 'handler/audio_handler.dart';
-
 void main() {
-  runApp(GameWidget(game: MyGame()));
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      themeMode: ThemeMode.dark,
+      darkTheme: ThemeData.dark(),
+      home: GameWidget<MyGame>(
+        game: MyGame(),
+        overlayBuilderMap: {
+          'won': (_, game) => EndScreen(
+                didWin: true,
+                onRetryPressed: game.restart,
+              ),
+          'lost': (_, game) => EndScreen(
+                didWin: false,
+                onRetryPressed: game.restart,
+              ),
+        },
+      ),
+    ),
+  );
 }
 
 class MyGame extends FlameGame with TapCallbacks {
@@ -26,6 +46,11 @@ class MyGame extends FlameGame with TapCallbacks {
   bool lost = false;
   bool won = false;
 
+  void restart() {
+    world = Universe();
+    overlays.clear();
+  }
+
   @override
   Future<void> update(double dt) async {
     super.update(dt);
@@ -33,12 +58,9 @@ class MyGame extends FlameGame with TapCallbacks {
       await audioHandler.stopBackgroundMusic();
       await audioHandler.playWinning();
       won = true;
-      add(VictoryScreen(size: Vector2(300, 300)));
+
+      overlays.add('won');
     }
-//    if (loosingState && !lost) {
-//      await audioHandler.stopBackgroundMusic();
-//      add(LoosingScreen());
-//      lost = true;
     super.update(dt);
   }
 
