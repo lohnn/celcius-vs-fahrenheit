@@ -2,14 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class EndScreen extends StatelessWidget {
-  final bool didWin;
   final void Function() onRetryPressed;
+  final String headline;
+  final String retryButton;
+  final String? extraText;
+  final String exitButtonText;
+  final String alertTitle;
+  final String yesText;
+  final String noText;
 
   const EndScreen({
-    required this.didWin,
+    required this.onRetryPressed,
+    required this.headline,
+    super.key,
+  })  : extraText = null,
+        alertTitle = '🏳️🤔',
+        yesText = '👍',
+        noText = '👎',
+        exitButtonText = '🤷‍️🏳️',
+        retryButton = '🚗🔥';
+
+  const EndScreen.draw({
     required this.onRetryPressed,
     super.key,
-  });
+  })  : headline = 'This game was actually multiple endings!',
+        retryButton = 'Retry',
+        extraText = 'Did you manage to get to this ending? Congratulations!',
+        alertTitle = 'Are you sure you want to quit?',
+        noText = 'No',
+        yesText = 'Yes',
+        exitButtonText = 'Exit game';
 
   @override
   Widget build(BuildContext context) {
@@ -21,17 +43,16 @@ class EndScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              switch (didWin) {
-                true => '🎉',
-                false => '😭',
-              },
+              headline,
               style: theme.textTheme.headlineLarge,
             ),
+            const SizedBox(height: 24),
+            if (extraText case final text?) Text(text),
             const SizedBox(height: 24),
             OutlinedButton(
               onPressed: onRetryPressed,
               child: Text(
-                '🚗🔥',
+                retryButton,
                 style: theme.textTheme.headlineMedium,
               ),
             ),
@@ -41,22 +62,22 @@ class EndScreen extends StatelessWidget {
                 await showDialog<bool>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: const Text('🏳️🤔'),
+                    title: Text(alertTitle),
                     actions: [
-                      const TextButton(
+                      TextButton(
                         onPressed: SystemNavigator.pop,
-                        child: Text('👍'),
+                        child: Text(yesText),
                       ),
                       TextButton(
                         onPressed: () => Navigator.of(context).pop(),
-                        child: const Text('👎'),
+                        child: Text(noText),
                       ),
                     ],
                   ),
                 );
               },
               child: Text(
-                '🤷‍️🏳️',
+                exitButtonText,
                 style: theme.textTheme.headlineMedium,
               ),
             ),

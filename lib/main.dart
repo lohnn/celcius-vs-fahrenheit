@@ -16,11 +16,14 @@ void main() {
         game: MyGame(),
         overlayBuilderMap: {
           'won': (_, game) => EndScreen(
-                didWin: true,
+                headline: '😭',
                 onRetryPressed: game.restart,
               ),
           'lost': (_, game) => EndScreen(
-                didWin: false,
+                headline: '🎉',
+                onRetryPressed: game.restart,
+              ),
+          'draw': (_, game) => EndScreen.draw(
                 onRetryPressed: game.restart,
               ),
         },
@@ -45,7 +48,7 @@ class MyGame extends FlameGame with TapCallbacks {
     overlays.clear();
   }
 
-  Future<void> setEndCondition({required bool didWin}) async {
+  Future<void> setEndCondition({required bool? didWin}) async {
     await audioHandler.stopBackgroundMusic();
     await audioHandler.playWinning();
 
@@ -53,6 +56,7 @@ class MyGame extends FlameGame with TapCallbacks {
       switch (didWin) {
         true => 'won',
         false => 'lost',
+        null => 'draw',
       },
     );
   }
