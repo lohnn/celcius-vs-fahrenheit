@@ -1,8 +1,6 @@
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:flame/palette.dart';
-import 'package:flutter/rendering.dart';
 import 'package:gj23/components/arrow.dart';
 import 'package:gj23/components/universe.dart';
 import 'package:gj23/extension/map_extension.dart';
@@ -31,6 +29,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   }
 
   final roundArrows = <Arrow>[];
+
   Map<AnimationState, String> get animationImages;
 
   Planet({
@@ -67,16 +66,9 @@ class FirePlanet extends Planet implements FightingPlanets {
   });
 
   @override
-  Paint get paint => BasicPalette.red.paint();
-
-  @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'FirePlanet_idle-Sheet.png',
       };
-  @override
-  Future<void> onLoad() async {
-    return super.onLoad();
-  }
 }
 
 class IcePlanet extends Planet implements FightingPlanets {
@@ -89,9 +81,6 @@ class IcePlanet extends Planet implements FightingPlanets {
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'FirePlanet_idle-Sheet.png',
       };
-
-  @override
-  Paint get paint => BasicPalette.blue.paint();
 }
 
 class NeutralPlanet extends Planet {
@@ -99,11 +88,9 @@ class NeutralPlanet extends Planet {
     required super.population,
     super.position,
   });
+
   @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'FirePlanet_idle-Sheet.png',
       };
-
-  @override
-  Paint get paint => BasicPalette.gray.paint();
 }
