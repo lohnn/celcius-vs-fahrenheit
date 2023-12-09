@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
 import 'package:celsius_vs_fahrenheit/components/planet.dart';
+import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/input.dart';
+import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 
 class Universe extends World with DragCallbacks {
@@ -130,5 +134,29 @@ class Universe extends World with DragCallbacks {
         anchor: Anchor.bottomLeft,
       ),
     ]);
+
+    for (var i = 0; i < 100; i++) {
+      _stars[Offset(
+        400 * _starsRandom.nextDouble() - 200,
+        400 * _starsRandom.nextDouble() - 200,
+      )] = 1.5 * _starsRandom.nextDouble();
+    }
+  }
+
+  final _stars = <Offset, double>{};
+  final _starsRandom = Random();
+  final _starsPaint = BasicPalette.white.paint();
+
+  @override
+  void render(Canvas canvas) {
+    for (final (offset, size) in _stars.records) {
+      canvas.drawCircle(
+        offset,
+        size,
+        _starsPaint,
+      );
+    }
+
+    super.render(canvas);
   }
 }

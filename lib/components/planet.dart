@@ -1,5 +1,4 @@
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
-import 'package:celsius_vs_fahrenheit/components/universe.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
 import 'package:celsius_vs_fahrenheit/main.dart';
 import 'package:flame/components.dart';
@@ -15,7 +14,7 @@ enum AnimationState {
 }
 
 sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
-    with HasWorldReference<Universe>, HasGameReference<MyGame> {
+    with HasGameReference<MyGame> {
   int _population;
 
   int get population => _population;
