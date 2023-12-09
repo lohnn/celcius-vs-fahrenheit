@@ -16,11 +16,11 @@ void main() {
         game: MyGame(),
         overlayBuilderMap: {
           'won': (_, game) => EndScreen(
-                headline: '😭',
+                headline: '🎉',
                 onRetryPressed: game.restart,
               ),
           'lost': (_, game) => EndScreen(
-                headline: '🎉',
+                headline: '😭',
                 onRetryPressed: game.restart,
               ),
           'draw': (_, game) => EndScreen.draw(

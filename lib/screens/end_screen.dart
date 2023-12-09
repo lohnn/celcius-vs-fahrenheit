@@ -25,9 +25,9 @@ class EndScreen extends StatelessWidget {
   const EndScreen.draw({
     required this.onRetryPressed,
     super.key,
-  })  : headline = 'This game was actually multiple endings!',
+  })  : headline = 'This game actually has multiple endings!',
         retryButton = 'Retry',
-        extraText = 'Did you manage to get to this ending? Congratulations!',
+        extraText = 'Did you manage to get to this ending?\nCongratulations!',
         alertTitle = 'Are you sure you want to quit?',
         noText = 'No',
         yesText = 'Yes',
@@ -44,10 +44,15 @@ class EndScreen extends StatelessWidget {
           children: [
             Text(
               headline,
+              textAlign: TextAlign.center,
               style: theme.textTheme.headlineLarge,
             ),
             const SizedBox(height: 24),
-            if (extraText case final text?) Text(text),
+            if (extraText case final text?)
+              Text(
+                text,
+                textAlign: TextAlign.center,
+              ),
             const SizedBox(height: 24),
             OutlinedButton(
               onPressed: onRetryPressed,
