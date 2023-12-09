@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
 import 'package:celsius_vs_fahrenheit/main.dart';
@@ -22,7 +24,8 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   int icePopulation;
 
   set population(int newValue) {
-    size = Vector2(newValue.toDouble(), newValue.toDouble()) * 0.5;
+    final radius = sqrt(newValue / pi);
+    size = Vector2(radius, radius) * 7;
     _population = population;
   }
 
