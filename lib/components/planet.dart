@@ -24,9 +24,10 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   int icePopulation;
 
   set population(int newValue) {
-    final radius = sqrt(newValue / pi);
+    final newValueClamp = min(newValue, 500);
+    final radius = sqrt(newValueClamp / pi);
     size = Vector2(radius, radius) * 7;
-    _population = newValue;
+    _population = newValueClamp;
   }
 
   final targetPlanets = <Planet, Arrow>{};
