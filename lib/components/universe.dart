@@ -10,7 +10,7 @@ import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 
 class Universe extends World with DragCallbacks {
-  Iterable<Planet> get planets => children.whereType<Planet>();
+  Iterable<Planet> get planets => children.query<Planet>();
 
   ({Arrow arrow, FirePlanet fromPlanet})? currentArrow;
   Planet? currentToPlanet;
