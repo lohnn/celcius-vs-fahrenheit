@@ -5,8 +5,11 @@ import 'package:celsius_vs_fahrenheit/components/planet.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/extensions.dart';
+import 'package:flame/flame.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
+import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
 class Universe extends World with DragCallbacks {
@@ -125,6 +128,11 @@ class Universe extends World with DragCallbacks {
       ),
     ].forEach(add);
 
+    final buttonSpriteSheet = SpriteSheet(
+      image: await Flame.images.load('EndTurnButton-Sheet.png'),
+      srcSize: Vector2(120, 66),
+    );
+
     addAll([
       RectangleComponent(
         position: Vector2(-200, 200),
@@ -133,8 +141,8 @@ class Universe extends World with DragCallbacks {
         paint: Paint()..color = Colors.black.withOpacity(1.0),
       ),
       SpriteButtonComponent(
-        button: await Sprite.load('EndTurnbuttonup.png'),
-        buttonDown: await Sprite.load('EndTurnbuttondown.png'),
+        button: buttonSpriteSheet.getSpriteById(0),
+        buttonDown: buttonSpriteSheet.getSpriteById(1),
         onPressed: triggerNextTurn,
         size: Vector2(120, 66),
         position: Vector2(-200, 200),
