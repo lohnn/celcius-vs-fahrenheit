@@ -39,19 +39,30 @@ class Universe extends World with DragCallbacks {
     }
   }
 
+  final _arrowMaxLength = 150;
+
   @override
   void onDragUpdate(DragUpdateEvent event) {
     super.onDragUpdate(event);
     if (currentArrow case final currentArrow?) {
+      final intendedEndPosition =
+          event.localEndPosition - currentArrow.arrow.fromPos;
       if (componentsAtPoint(event.localEndPosition)
               .whereType<Planet>()
               .firstOrNull
-          case final toPlanet? when currentArrow.fromPlanet != toPlanet) {
+          case final toPlanet?
+          when currentArrow.fromPlanet != toPlanet &&
+              intendedEndPosition.length < _arrowMaxLength) {
         currentToPlanet = toPlanet;
         currentArrow.arrow.toPos.setFrom(toPlanet.center);
       } else {
         currentToPlanet = null;
-        currentArrow.arrow.toPos.setFrom(event.localEndPosition);
+        final squishValue = intendedEndPosition.length - _arrowMaxLength;
+        final clampedArrowEndPosition = intendedEndPosition
+          ..clampLength(0, _arrowMaxLength + squishValue * 0.3);
+        currentArrow.arrow.toPos.setFrom(
+          currentArrow.arrow.fromPos + clampedArrowEndPosition,
+        );
       }
     }
   }
