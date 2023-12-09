@@ -130,11 +130,6 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
       ),
     ].forEach(add);
 
-    final buttonSpriteSheet = SpriteSheet(
-      image: await Flame.images.load('EndTurnButton-Sheet.png'),
-      srcSize: Vector2(120, 66),
-    );
-
     addAll([
       RectangleComponent(
         position: Vector2(-200, 200),
