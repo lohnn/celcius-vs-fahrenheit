@@ -142,7 +142,7 @@ class FirePlanet extends Planet implements FightingPlanets {
   @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'FirePlanet_idle-Sheet.png',
-        AnimationState.dying: 'FirePlanet-explosion3.png',
+        AnimationState.dying: 'FirePlanet-explosion.png',
       };
 }
 
