@@ -18,6 +18,8 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   int _population;
 
   int get population => _population;
+  int fire_population;
+  int ice_population;
 
   set population(int newValue) {
     size = Vector2(newValue.toDouble(), newValue.toDouble()) * 0.5;
@@ -30,8 +32,10 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
 
   Planet({
     required int population,
-    super.position,
+    required super.position,
   })  : _population = population,
+        fire_population = 0,
+        ice_population = 0,
         super(anchor: Anchor.center, current: AnimationState.idle);
 
   void startTargeting(Planet targetPlanet, Arrow arrow) {
@@ -59,6 +63,9 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
         ),
     };
   }
+  
+  void settleArrows() {}
+
 }
 
 interface class FightingPlanets {}
@@ -68,6 +75,16 @@ class FirePlanet extends Planet implements FightingPlanets {
     required super.population,
     super.position,
   });
+
+  @override
+  void settleArrows() {
+    int n_planets = targetPlanets.length;
+    int settlerForce = (population / (n_planets+1)).round();
+    for (final (planet, arrow) in targetPlanets.records) {
+      planet.fire_population = planet.fire_population + settlerForce;
+    }
+
+  }
 
   @override
   Map<AnimationState, String> get animationImages => {
@@ -80,6 +97,17 @@ class IcePlanet extends Planet implements FightingPlanets {
     required super.population,
     super.position,
   });
+
+  @override
+  void settleArrows() {
+    int n_planets = targetPlanets.length;
+    int settlerForce = (population / (n_planets+1)).round();
+    for (final (planet, arrow) in targetPlanets.records) {
+      planet.ice_population = planet.ice_population + settlerForce;
+    }
+
+  }
+
 
   @override
   Map<AnimationState, String> get animationImages => {

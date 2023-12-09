@@ -1,3 +1,4 @@
+import 'dart:js_interop_unsafe';
 import 'dart:math';
 
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
@@ -8,6 +9,17 @@ import 'package:flame/events.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
+
+class MyComponent extends PositionComponent with TapCallbacks, HasWorldReference<Universe> {
+  MyComponent() : super(size: Vector2(80, 60));
+  @override
+  final debugMode = true;
+
+  @override
+  void onTapUp(TapUpEvent event) {
+    world.triggerNextTurn();
+  }
+}
 
 class Universe extends World with DragCallbacks {
   late final List<Planet> planets;
@@ -130,6 +142,7 @@ class Universe extends World with DragCallbacks {
     }
 
     addAll([
+      MyComponent(),
       RectangleComponent(
         position: Vector2(-200, 200),
         anchor: Anchor.bottomLeft,
@@ -139,7 +152,7 @@ class Universe extends World with DragCallbacks {
       SpriteButtonComponent(
         button: await Sprite.load('EndTurnbuttonup.png'),
         buttonDown: await Sprite.load('EndTurnbuttondown.png'),
-        onPressed: () {},
+        onPressed: triggerNextTurn,
         size: Vector2(120, 66),
         position: Vector2(-200, 200),
         anchor: Anchor.bottomLeft,
@@ -169,5 +182,56 @@ class Universe extends World with DragCallbacks {
     }
 
     super.render(canvas);
+  }
+
+  void triggerNextTurn() {
+    for (final planet in planets) {
+      planet.settleArrows();
+    }
+    for (final planet in planets) {
+      final Type invadorType;
+      int threshold = 0;
+      int invadorForce = (planet.fire_population - planet.ice_population);
+      if (invadorForce > 0) {
+        invadorType = FirePlanet;
+      } else {
+        invadorType = IcePlanet;
+      }
+      invadorForce = invadorForce.abs();
+      if (planet.runtimeType == NeutralPlanet) {
+        final newPopulation = planet.population - invadorForce;
+        if (newPopulation < threshold) {
+          newPlanet(invadorType, planet, newPopulation.abs());
+        } else {
+          planet.population = newPopulation;
+        }
+      } else if (planet.runtimeType != invadorType) {
+        final newPopulation = planet.population - invadorForce;
+        if (newPopulation < 0) {
+          newPlanet(invadorType, planet, newPopulation.abs());
+        } else {
+          planet.population = newPopulation;
+        }
+      } else if (planet.runtimeType == invadorType) {
+        planet.population = planet.population + invadorForce;
+      }
+    }
+  }
+  void newPlanet(Type planetType, Planet old, int population) {
+    switch (planetType) {
+      case FirePlanet:
+        print("adding fire planet $population ${old.position}");
+        add(FirePlanet(population: population,
+                       position: old.position,));
+      case IcePlanet:
+        print("adding fire planet");
+        add(IcePlanet(population: population,
+                      position: old.position,));
+      case NeutralPlanet:
+        print("adding fire planet");
+        add(NeutralPlanet(population: population,
+                          position: old.position,));
+    }
+    old.removeFromParent();
   }
 }
