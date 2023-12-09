@@ -7,6 +7,7 @@ import 'package:celsius_vs_fahrenheit/components/universe.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
 import 'package:celsius_vs_fahrenheit/main.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flame/extensions.dart';
 
 enum AnimationState {
@@ -21,7 +22,7 @@ enum AnimationState {
 
 sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     with HasGameReference<MyGame>, HasWorldReference<Universe> {
-  int _population;
+  int _population = 0;
 
   int get population => _population;
   int firePopulation;
@@ -33,7 +34,11 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   set population(int newValue) {
     final newValueClamp = min(newValue, 500);
     final radius = sqrt(newValueClamp / pi);
-    size = Vector2(radius, radius) * 7;
+    final effect = SizeEffect.to(
+      Vector2(radius, radius) * 7,
+      EffectController(duration: 1),
+    );
+    add(effect);
     _population = newValueClamp;
   }
 
@@ -48,7 +53,9 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
         firePopulation = 0,
         icePopulation = 0,
         waitFor = 0,
-        super(anchor: Anchor.center, current: AnimationState.idle);
+        super(anchor: Anchor.center, current: AnimationState.idle) {
+    size = Vector2(0, 0);
+  }
 
   void startTargeting(Planet targetPlanet, Arrow arrow) {
     if (targetPlanets.containsKey(targetPlanet)) {
