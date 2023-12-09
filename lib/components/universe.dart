@@ -22,7 +22,7 @@ class MyComponent extends PositionComponent
 }
 
 class Universe extends World with DragCallbacks {
-  late final List<Planet> planets;
+  Iterable<Planet> get planets => children.whereType<Planet>();
 
   ({Arrow arrow, FirePlanet fromPlanet})? currentArrow;
   Planet? currentToPlanet;
@@ -109,7 +109,7 @@ class Universe extends World with DragCallbacks {
       (300, 120, 100),
     ];
 
-    planets = [
+    [
       FirePlanet(
         population: _basePlanetStartPopulation,
         position: Vector2(150, 150),
@@ -135,11 +135,7 @@ class Universe extends World with DragCallbacks {
         population: _basePlanetStartPopulation,
         position: Vector2(-150, -150),
       ),
-    ];
-
-    for (final planet in planets) {
-      add(planet);
-    }
+    ].forEach(add);
 
     addAll([
       MyComponent(),
