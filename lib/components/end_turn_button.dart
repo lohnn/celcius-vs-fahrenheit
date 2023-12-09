@@ -94,15 +94,5 @@ class EndTurnButton extends PositionComponent {
         hourGlassFillPath.lineTo(hourGlassLeft, 5);
     }
     canvas.drawPath(hourGlassFillPath, backgroundPaint);
-
-    // canvas.drawRect(
-    //   Rect.fromLTRB(
-    //     width / 2 - hourGlassHeight / 3,
-    //     5,
-    //     width / 2 + hourGlassHeight / 3,
-    //     height - 5,
-    //   ),
-    //   paint,
-    // );
   }
 }
