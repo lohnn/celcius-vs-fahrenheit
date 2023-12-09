@@ -54,9 +54,9 @@ class Universe extends World with DragCallbacks {
 
     if (currentArrow case final currentArrow?) {
       if (currentToPlanet case final currentToPlanet?) {
-        // TODO: Hand over the arrow to the planet
-        print(
-          'Dropping ship: ${currentArrow.fromPlanet} $currentToPlanet',
+        currentArrow.fromPlanet.startTargeting(
+          currentToPlanet,
+          currentArrow.arrow,
         );
       } else {
         currentArrow.arrow.removeFromParent();

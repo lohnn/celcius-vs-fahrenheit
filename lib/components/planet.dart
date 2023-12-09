@@ -28,7 +28,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     _population = population;
   }
 
-  final roundArrows = <Arrow>[];
+  final targetPlanets = <Planet, Arrow>{};
 
   Map<AnimationState, String> get animationImages;
 
@@ -37,6 +37,15 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     super.position,
   })  : _population = population,
         super(anchor: Anchor.center, current: AnimationState.idle);
+
+  void startTargeting(Planet targetPlanet, Arrow arrow) {
+    if (targetPlanets.containsKey(targetPlanet)) {
+      arrow.removeFromParent();
+      return;
+    }
+
+    targetPlanets[targetPlanet] = arrow;
+  }
 
   @override
   Future<void> onLoad() async {
