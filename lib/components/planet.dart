@@ -162,8 +162,8 @@ class IcePlanet extends Planet implements FightingPlanets {
       planet.icePopulation = planet.icePopulation + settlerForce;
       world.add(
         Termos(
-          fromPos: arrow.fromPos,
-          toPos: arrow.toPos,
+          fromPos: center,
+          toPos: planet.center,
           onTravelComplete: world.termosArrived,
         ),
       );

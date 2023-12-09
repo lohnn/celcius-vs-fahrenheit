@@ -13,7 +13,7 @@ enum ArrowPaint {
 
 class Arrow extends Component with HasPaint<ArrowPaint>, HasDecorator {
   final Vector2 fromPos;
-  final Vector2 toPos;
+  Vector2 toPos;
   Paint arrowPaint = BasicPalette.blue.paint();
 
   Arrow({

@@ -207,8 +207,9 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
       }
       if (currentPlanet.population > 300 && allFriends) {
         for (final otherPlanet in possibleTargets) {
-          currentPlanet.targetPlanets[otherPlanet] =
-              Arrow(fromPos: Vector2(0, 0));
+          Arrow arrow = Arrow(fromPos: currentPlanet.center);
+          arrow.toPos = otherPlanet.center;
+          currentPlanet.targetPlanets[otherPlanet] = arrow;
         }
         return true;
       }
