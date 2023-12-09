@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
 import 'package:celsius_vs_fahrenheit/components/planet.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
+import 'package:celsius_vs_fahrenheit/main.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/extensions.dart';
@@ -12,7 +13,7 @@ import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
-class Universe extends World with DragCallbacks {
+class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   Iterable<Planet> get planets => children.query<Planet>();
 
   ({Arrow arrow, FirePlanet fromPlanet})? currentArrow;
@@ -175,6 +176,23 @@ class Universe extends World with DragCallbacks {
     super.render(canvas);
   }
 
+  void checkGameConditions() {
+    int firePlanets = 0;
+    int icePlanets = 0;
+    for (final planet in planets) {
+      if (planet.runtimeType == FirePlanet) {
+        firePlanets++;
+      } else if (planet.runtimeType == IcePlanet) {
+        icePlanets++;
+      }
+    }
+    if (icePlanets == 0) {
+      gameRef.winningState = true;
+    } else if (firePlanets == 0) {
+      gameRef.loosingState = true;
+    }
+  }
+
   void triggerNextTurn() {
     const threshold = 5;
     const growthRate = 1.25;
@@ -235,6 +253,7 @@ class Universe extends World with DragCallbacks {
       planet.icePopulation = 0;
       planet.firePopulation = 0;
     }
+    checkGameConditions();
   }
 
   Planet newPlanet(Type planetType, Planet old, int population0) {

@@ -4,6 +4,7 @@ import 'package:flame/events.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
+import 'components/victory_screen.dart';
 import 'handler/audio_handler.dart';
 
 void main() {
@@ -20,6 +21,26 @@ class MyGame extends FlameGame with TapCallbacks {
         );
 
   final audioHandler = AudioHandler();
+  bool loosingState = false;
+  bool winningState = false;
+  bool lost = false;
+  bool won = false;
+
+  @override
+  Future<void> update(double dt) async {
+    super.update(dt);
+    if (winningState && !won) {
+      await audioHandler.stopBackgroundMusic();
+      await audioHandler.playWinning();
+      won = true;
+      add(VictoryScreen(size: Vector2(300, 300)));
+    }
+//    if (loosingState && !lost) {
+//      await audioHandler.stopBackgroundMusic();
+//      add(LoosingScreen());
+//      lost = true;
+    super.update(dt);
+  }
 
   @override
   Future<void> onLoad() async {
@@ -30,7 +51,9 @@ class MyGame extends FlameGame with TapCallbacks {
 
   @override
   void onTapUp(TapUpEvent event) {
-    audioHandler.playBackgroundMusic();
+    if (!audioHandler.isPlaying()) {
+      audioHandler.playBackgroundMusic();
+    }
     super.onTapUp(event);
   }
 }

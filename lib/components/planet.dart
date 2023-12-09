@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
@@ -63,8 +62,12 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
           SpriteAnimationData.sequenced(
             amount: 4,
             textureSize: Vector2.all(32),
+<<<<<<< Updated upstream
             stepTime: 0.15,
             loop: state != AnimationState.dying,
+=======
+            stepTime: 0.3,
+>>>>>>> Stashed changes
           ),
         ),
     };
