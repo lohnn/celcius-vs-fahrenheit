@@ -83,7 +83,7 @@ class IcePlanet extends Planet implements FightingPlanets {
 
   @override
   Map<AnimationState, String> get animationImages => {
-        AnimationState.idle: 'FirePlanet_idle-Sheet.png',
+        AnimationState.idle: 'IcePlanet_idle-Sheet.png',
       };
 }
 
