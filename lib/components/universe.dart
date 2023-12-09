@@ -18,6 +18,8 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   ({Arrow arrow, FirePlanet fromPlanet})? currentArrow;
   Planet? currentToPlanet;
 
+  int waitFor = 0;
+
   void clearDrag() {
     currentArrow = null;
     currentToPlanet = null;
@@ -170,6 +172,13 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
     super.render(canvas);
   }
 
+  void termosArrived() {
+    waitFor = waitFor - 1;
+    if (waitFor == 0) {
+      handlePlanets();
+    }
+  }
+
   void checkGameConditions() {
     if (planets.whereType<IcePlanet>().isEmpty) {
       gameRef.setEndCondition(didWin: true);
@@ -179,16 +188,23 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   }
 
   void triggerNextTurn() {
-    const threshold = 5;
-    const growthRate = 1.25;
-    final newPlanets = <(Planet, Planet)>[];
-
     for (final planet in planets) {
       planet.settleArrows();
     }
+    print("waiting for $waitFor");
+    if (waitFor == 0) {
+      handlePlanets();
+    }
+  }
 
+  void handlePlanets() {
     for (final planet in planets) {
+      const threshold = 5;
+      const growthRate = 1.25;
+
       final Type invadorType;
+      Planet? newP = null;
+
       var invadorForce = planet.firePopulation - planet.icePopulation;
       if (invadorForce > 0) {
         invadorType = FirePlanet;
@@ -199,46 +215,40 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
       if (planet.runtimeType == NeutralPlanet) {
         final newPopulation = planet.population - invadorForce;
         if (newPopulation < threshold) {
-          newPlanets.add(
-              (planet, newPlanet(invadorType, planet, newPopulation.abs())));
+          newP = newPlanet(invadorType, planet, newPopulation.abs());
         } else {
           planet.population = newPopulation;
         }
       } else if (planet.runtimeType != invadorType) {
         final newPopulation = planet.population - invadorForce;
         if (newPopulation < 0) {
-          newPlanets.add(
-              (planet, newPlanet(invadorType, planet, newPopulation.abs())));
+          newP = newPlanet(invadorType, planet, newPopulation.abs());
         } else {
           planet.population = newPopulation;
         }
       } else if (planet.runtimeType == invadorType) {
         planet.population = planet.population + invadorForce;
       }
-    }
 
-    for (final planet in planets) {
       if (planet.population < threshold) {
-        newPlanets
-            .add((planet, newPlanet(NeutralPlanet, planet, planet.population)));
+        newP = newPlanet(NeutralPlanet, planet, planet.population);
       }
-    }
-    for (final (old, newP) in newPlanets) {
-      old.explode(() {
-        old.removeFromParent();
-        add(newP);
-      });
-    }
 
-    for (final planet in planets) {
+      if (newP != null) {
+        planet.explode(() {
+          planet.removeFromParent();
+          add(newP!);
+        });
+      }
+
       if (planet.runtimeType != NeutralPlanet) {
         planet.population = (planet.population * growthRate).round();
       }
       planet.targetPlanets.clear();
       planet.icePopulation = 0;
       planet.firePopulation = 0;
+      checkGameConditions();
     }
-    checkGameConditions();
   }
 
   Planet newPlanet(Type planetType, Planet old, int population0) {

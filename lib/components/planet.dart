@@ -26,6 +26,9 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   int get population => _population;
   int firePopulation;
   int icePopulation;
+  int waitFor;
+
+  void Function()? continuationFun;
 
   set population(int newValue) {
     final newValueClamp = min(newValue, 500);
@@ -44,6 +47,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   })  : _population = population,
         firePopulation = 0,
         icePopulation = 0,
+        waitFor = 0,
         super(anchor: Anchor.center, current: AnimationState.idle);
 
   void startTargeting(Planet targetPlanet, Arrow arrow) {
@@ -56,7 +60,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   }
 
   @override
-  bool get debugMode => false;
+  bool get debugMode => true;
 
   @override
   void renderDebugMode(Canvas canvas) {
@@ -64,7 +68,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     debugTextPaint.render(
       canvas,
       'p: $population',
-      Vector2(-10, 15 ),
+      Vector2(-10, 15),
     );
   }
 
@@ -84,7 +88,11 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     final SpriteAnimation dying = await game.loadSpriteAnimation(
       animationImages[AnimationState.dying]!,
       SpriteAnimationData.sequenced(
-          amount: 5, textureSize: Vector2.all(32), stepTime: 1.5, loop: false),
+        amount: 6,
+        textureSize: Vector2.all(32),
+        stepTime: 0.3,
+        loop: false,
+      ),
     );
     animations = {AnimationState.dying: dying, AnimationState.idle: idle};
   }
@@ -109,9 +117,17 @@ class FirePlanet extends Planet implements FightingPlanets {
   void settleArrows() {
     final nPlanets = targetPlanets.length;
     final settlerForce = (population / (nPlanets + 1)).round();
+
     for (final (planet, arrow) in targetPlanets.records) {
+      world.waitFor = world.waitFor + 1;
       planet.firePopulation = planet.firePopulation + settlerForce;
-      world.add(Termos(fromPos: arrow.fromPos, toPos: arrow.toPos, onTravelComplete: () => null));
+      world.add(
+        Termos(
+          fromPos: arrow.fromPos,
+          toPos: arrow.toPos,
+          onTravelComplete: world.termosArrived,
+        ),
+      );
       arrow.removeFromParent();
     }
     population = settlerForce;
@@ -120,7 +136,7 @@ class FirePlanet extends Planet implements FightingPlanets {
   @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'FirePlanet_idle-Sheet.png',
-        AnimationState.dying: 'FirePlanet-explosion.png',
+        AnimationState.dying: 'FirePlanet-explosion3.png',
       };
 }
 
@@ -134,16 +150,27 @@ class IcePlanet extends Planet implements FightingPlanets {
   void settleArrows() {
     final nPlanets = targetPlanets.length;
     final settlerForce = (population / (nPlanets + 1)).round();
+
     for (final (planet, arrow) in targetPlanets.records) {
+      world.waitFor = world.waitFor + 1;
       planet.icePopulation = planet.icePopulation + settlerForce;
+      world.add(
+        Termos(
+          fromPos: arrow.fromPos,
+          toPos: arrow.toPos,
+          onTravelComplete: world.termosArrived,
+        ),
+      );
+      arrow.removeFromParent();
     }
+
     population = settlerForce;
   }
 
   @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'IcePlanet_idle-Sheet.png',
-        AnimationState.dying: 'FirePlanet-explosion.png',
+        AnimationState.dying: 'FirePlanet-explosion3.png',
         AnimationState.birthing: 'IcePlanet_transform-Sheet.png',
       };
 }
@@ -156,7 +183,7 @@ class NeutralPlanet extends Planet {
 
   @override
   Map<AnimationState, String> get animationImages => {
-        AnimationState.dying: 'FirePlanet-explosion.png',
+        AnimationState.dying: 'FirePlanet-explosion3.png',
         AnimationState.idle: 'NeutralPlanet_idle-Sheet.png',
       };
 }
