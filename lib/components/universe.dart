@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
+import 'package:celsius_vs_fahrenheit/components/end_turn_button.dart';
 import 'package:celsius_vs_fahrenheit/components/planet.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
 import 'package:celsius_vs_fahrenheit/main.dart';
@@ -141,12 +142,12 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
         size: Vector2(120, 66),
         paint: Paint()..color = Colors.black.withOpacity(1.0),
       ),
-      SpriteButtonComponent(
-        button: buttonSpriteSheet.getSpriteById(0),
-        buttonDown: buttonSpriteSheet.getSpriteById(1),
+      ButtonComponent(
+        button: EndTurnButton(),
+        buttonDown: EndTurnButton(isDown: true),
         onPressed: triggerNextTurn,
-        size: Vector2(120, 66),
-        position: Vector2(-200, 200),
+        size: Vector2(120, 50),
+        position: Vector2(-190, 190),
         anchor: Anchor.bottomLeft,
       ),
     ]);
