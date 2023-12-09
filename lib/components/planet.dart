@@ -1,9 +1,11 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
 import 'package:celsius_vs_fahrenheit/main.dart';
 import 'package:flame/components.dart';
+import 'package:flame/extensions.dart';
 
 enum AnimationState {
   idle,
@@ -49,6 +51,19 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     }
 
     targetPlanets[targetPlanet] = arrow;
+  }
+
+  @override
+  bool get debugMode => false;
+
+  @override
+  void renderDebugMode(Canvas canvas) {
+    super.renderDebugMode(canvas);
+    debugTextPaint.render(
+      canvas,
+      'p: $population',
+      Vector2(-10, 15 ),
+    );
   }
 
   @override
