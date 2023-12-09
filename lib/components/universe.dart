@@ -119,10 +119,10 @@ class Universe extends World with DragCallbacks {
           position: Vector2(-200, 200),
           anchor: Anchor.bottomLeft,
           size: Vector2(120, 66),
-          paint: Paint()..color = Colors.red.withOpacity(1.0)),
+          paint: Paint()..color = Colors.black.withOpacity(1.0)),
       SpriteButtonComponent(
-        button: await Sprite.load("EndTrunbuttonup.png"),
-        buttonDown: await Sprite.load("EndTrunbuttondoqn.png"),
+        button: await Sprite.load("EndTurnbuttonup.png"),
+        buttonDown: await Sprite.load("EndTurnbuttondown.png"),
         onPressed: () {},
         size: Vector2(120, 66),
         position: Vector2(-200, 200),
