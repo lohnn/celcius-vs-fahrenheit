@@ -85,6 +85,7 @@ class FirePlanet extends Planet implements FightingPlanets {
     final settlerForce = (population / (nPlanets + 1)).round();
     for (final (planet, arrow) in targetPlanets.records) {
       planet.firePopulation = planet.firePopulation + settlerForce;
+      arrow.removeFromParent();
     }
     population = settlerForce;
   }

@@ -183,6 +183,7 @@ class Universe extends World with DragCallbacks {
     for (final planet in planets) {
       planet.settleArrows();
     }
+
     for (final planet in planets) {
       final Type invadorType;
       var invadorForce = planet.firePopulation - planet.icePopulation;
@@ -197,7 +198,6 @@ class Universe extends World with DragCallbacks {
         if (newPopulation < threshold) {
           newPlanets.add(newPlanet(invadorType, planet, newPopulation.abs()));
         } else {
-          print("new population ${planet.population}");
           planet.population = newPopulation;
         }
       } else if (planet.runtimeType != invadorType) {
@@ -226,10 +226,9 @@ class Universe extends World with DragCallbacks {
       if (planet.runtimeType != NeutralPlanet) {
         planet.population = (planet.population * growthRate).round();
       }
-      for (final arrow in planet.targetPlanets.values) {
-        arrow.removeFromParent();
-      }
       planet.targetPlanets.clear();
+      planet.icePopulation = 0;
+      planet.firePopulation = 0;
     }
   }
 
