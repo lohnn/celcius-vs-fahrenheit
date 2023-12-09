@@ -2,6 +2,8 @@ import 'package:celsius_vs_fahrenheit/components/arrow.dart';
 import 'package:celsius_vs_fahrenheit/components/planet.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
+import 'package:flame/input.dart';
+import 'package:flutter/material.dart';
 
 class Universe extends World with DragCallbacks {
   late final List<Planet> planets;
@@ -111,5 +113,21 @@ class Universe extends World with DragCallbacks {
     for (final planet in planets) {
       add(planet);
     }
+
+    addAll([
+      RectangleComponent(
+          position: Vector2(-200, 200),
+          anchor: Anchor.bottomLeft,
+          size: Vector2(120, 66),
+          paint: Paint()..color = Colors.red.withOpacity(1.0)),
+      SpriteButtonComponent(
+        button: await Sprite.load("EndTrunbuttonup.png"),
+        buttonDown: await Sprite.load("EndTrunbuttondoqn.png"),
+        onPressed: () {},
+        size: Vector2(120, 66),
+        position: Vector2(-200, 200),
+        anchor: Anchor.bottomLeft,
+      ),
+    ]);
   }
 }
