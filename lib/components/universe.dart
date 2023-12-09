@@ -67,8 +67,8 @@ class Universe extends World with DragCallbacks {
     clearDrag();
   }
 
-  static const _basePlanetStartPopulation = 200;
-  static const _centrePlanetStartPopulation = 150;
+  static const _basePlanetStartPopulation = 100;
+  static const _centrePlanetStartPopulation = 120;
 
   @override
   Future<void> onLoad() async {

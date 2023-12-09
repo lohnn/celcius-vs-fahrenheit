@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
 import 'package:celsius_vs_fahrenheit/components/universe.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
@@ -23,8 +21,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   int get population => _population;
 
   set population(int newValue) {
-    final newSize = sqrt(newValue);
-    size = Vector2(newSize, newSize) * 3;
+    size = Vector2(newValue.toDouble(), newValue.toDouble()) * 0.5;
     _population = population;
   }
 
@@ -50,8 +47,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    final newSize = sqrt(population);
-    size = Vector2(newSize, newSize) * 3;
+    population = population;
     animations = {
       for (final (state, asset) in animationImages.records)
         state: await game.loadSpriteAnimation(
