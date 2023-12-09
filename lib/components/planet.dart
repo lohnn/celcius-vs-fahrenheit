@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
+import 'package:celsius_vs_fahrenheit/components/termos.dart';
+import 'package:celsius_vs_fahrenheit/components/universe.dart';
 import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
 import 'package:celsius_vs_fahrenheit/main.dart';
 import 'package:flame/components.dart';
@@ -16,7 +18,7 @@ enum AnimationState {
 }
 
 sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
-    with HasGameReference<MyGame> {
+    with HasGameReference<MyGame>, HasWorldReference<Universe> {
   int _population;
 
   int get population => _population;
@@ -91,6 +93,7 @@ class FirePlanet extends Planet implements FightingPlanets {
     final settlerForce = (population / (nPlanets + 1)).round();
     for (final (planet, arrow) in targetPlanets.records) {
       planet.firePopulation = planet.firePopulation + settlerForce;
+      world.add(Termos(fromPos: arrow.fromPos, toPos: arrow.toPos, onTravelComplete: () => null));
       arrow.removeFromParent();
     }
     population = settlerForce;
