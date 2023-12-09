@@ -71,7 +71,7 @@ class FirePlanet extends Planet implements FightingPlanets {
 
   @override
   Map<AnimationState, String> get animationImages => {
-        AnimationState.idle: 'images/FirePlane_idle-Sheet.png',
+        AnimationState.idle: 'FirePlanet_idle-Sheet.png',
       };
   @override
   Future<void> onLoad() async {
@@ -87,7 +87,7 @@ class IcePlanet extends Planet implements FightingPlanets {
 
   @override
   Map<AnimationState, String> get animationImages => {
-        AnimationState.idle: 'images/FirePlane_idle-Sheet.png',
+        AnimationState.idle: 'FirePlanet_idle-Sheet.png',
       };
 
   @override
@@ -101,7 +101,7 @@ class NeutralPlanet extends Planet {
   });
   @override
   Map<AnimationState, String> get animationImages => {
-        AnimationState.idle: 'images/FirePlane_idle-Sheet.png',
+        AnimationState.idle: 'FirePlanet_idle-Sheet.png',
       };
 
   @override
