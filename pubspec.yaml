@@ -1,5 +1,5 @@
-name: gj23
-description: A simple Flame game.
+name: celsius_vs_fahrenheit
+description: THE Flame Game Jam 23 game
 version: 0.1.0
 
 publish_to: 'none'

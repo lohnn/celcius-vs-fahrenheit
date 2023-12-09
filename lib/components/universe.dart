@@ -1,7 +1,7 @@
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:gj23/components/arrow.dart';
-import 'package:gj23/components/planet.dart';
+import 'package:celsius_vs_fahrenheit/components/arrow.dart';
+import 'package:celsius_vs_fahrenheit/components/planet.dart';
 
 class Universe extends World with DragCallbacks {
   late final List<Planet> planets;

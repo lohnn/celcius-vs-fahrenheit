@@ -1,10 +1,10 @@
 import 'dart:math';
 
+import 'package:celsius_vs_fahrenheit/components/arrow.dart';
+import 'package:celsius_vs_fahrenheit/components/universe.dart';
+import 'package:celsius_vs_fahrenheit/extension/map_extension.dart';
+import 'package:celsius_vs_fahrenheit/main.dart';
 import 'package:flame/components.dart';
-import 'package:gj23/components/arrow.dart';
-import 'package:gj23/components/universe.dart';
-import 'package:gj23/extension/map_extension.dart';
-import 'package:gj23/main.dart';
 
 enum AnimationState {
   idle,
