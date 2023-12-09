@@ -9,18 +9,6 @@ import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 
-class MyComponent extends PositionComponent
-    with TapCallbacks, HasWorldReference<Universe> {
-  MyComponent() : super(size: Vector2(80, 60));
-  @override
-  final debugMode = true;
-
-  @override
-  void onTapUp(TapUpEvent event) {
-    world.triggerNextTurn();
-  }
-}
-
 class Universe extends World with DragCallbacks {
   Iterable<Planet> get planets => children.whereType<Planet>();
 
@@ -138,7 +126,6 @@ class Universe extends World with DragCallbacks {
     ].forEach(add);
 
     addAll([
-      MyComponent(),
       RectangleComponent(
         position: Vector2(-200, 200),
         anchor: Anchor.bottomLeft,
@@ -181,12 +168,14 @@ class Universe extends World with DragCallbacks {
   }
 
   void triggerNextTurn() {
+    const threshold = 5;
+    const growthRate = 1.25;
+
     for (final planet in planets) {
       planet.settleArrows();
     }
     for (final planet in planets) {
       final Type invadorType;
-      const threshold = 0;
       var invadorForce = planet.firePopulation - planet.icePopulation;
       if (invadorForce > 0) {
         invadorType = FirePlanet;
@@ -212,9 +201,24 @@ class Universe extends World with DragCallbacks {
         planet.population = planet.population + invadorForce;
       }
     }
+
+    for (final planet in planets) {
+      if (planet.population < threshold) {
+        newPlanet(NeutralPlanet, planet, planet.population);
+      }
+    }
+
+    for (final planet in planets) {
+      planet.population = (planet.population * growthRate).round();
+      for (final arrow in planet.targetPlanets.values) {
+        arrow.removeFromParent();
+      }
+      planet.targetPlanets.clear();
+    }
   }
 
-  void newPlanet(Type planetType, Planet old, int population) {
+  void newPlanet(Type planetType, Planet old, int population0) {
+    int population = max(population0, 15);
     switch (planetType) {
       case FirePlanet:
         print('adding fire planet $population ${old.position}');
