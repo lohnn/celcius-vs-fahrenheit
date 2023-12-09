@@ -9,7 +9,7 @@ enum AnimationState {
 //  growing,
 //  hit,
 //  dying,
-//  won,
+  birthing,
   ;
 }
 
@@ -18,8 +18,8 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   int _population;
 
   int get population => _population;
-  int fire_population;
-  int ice_population;
+  int firePopulation;
+  int icePopulation;
 
   set population(int newValue) {
     size = Vector2(newValue.toDouble(), newValue.toDouble()) * 0.5;
@@ -34,8 +34,8 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     required int population,
     required super.position,
   })  : _population = population,
-        fire_population = 0,
-        ice_population = 0,
+        firePopulation = 0,
+        icePopulation = 0,
         super(anchor: Anchor.center, current: AnimationState.idle);
 
   void startTargeting(Planet targetPlanet, Arrow arrow) {
@@ -63,9 +63,8 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
         ),
     };
   }
-  
-  void settleArrows() {}
 
+  void settleArrows() {}
 }
 
 interface class FightingPlanets {}
@@ -78,12 +77,11 @@ class FirePlanet extends Planet implements FightingPlanets {
 
   @override
   void settleArrows() {
-    int n_planets = targetPlanets.length;
-    int settlerForce = (population / (n_planets+1)).round();
+    final nPlanets = targetPlanets.length;
+    final settlerForce = (population / (nPlanets + 1)).round();
     for (final (planet, arrow) in targetPlanets.records) {
-      planet.fire_population = planet.fire_population + settlerForce;
+      planet.firePopulation = planet.firePopulation + settlerForce;
     }
-
   }
 
   @override
@@ -100,18 +98,17 @@ class IcePlanet extends Planet implements FightingPlanets {
 
   @override
   void settleArrows() {
-    int n_planets = targetPlanets.length;
-    int settlerForce = (population / (n_planets+1)).round();
+    final nPlanets = targetPlanets.length;
+    final settlerForce = (population / (nPlanets + 1)).round();
     for (final (planet, arrow) in targetPlanets.records) {
-      planet.ice_population = planet.ice_population + settlerForce;
+      planet.icePopulation = planet.icePopulation + settlerForce;
     }
-
   }
-
 
   @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'IcePlanet_idle-Sheet.png',
+        AnimationState.birthing: 'IcePlanet_transform-Sheet.png',
       };
 }
 

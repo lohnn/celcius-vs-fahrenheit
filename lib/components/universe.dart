@@ -1,4 +1,3 @@
-import 'dart:js_interop_unsafe';
 import 'dart:math';
 
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
@@ -10,7 +9,8 @@ import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 
-class MyComponent extends PositionComponent with TapCallbacks, HasWorldReference<Universe> {
+class MyComponent extends PositionComponent
+    with TapCallbacks, HasWorldReference<Universe> {
   MyComponent() : super(size: Vector2(80, 60));
   @override
   final debugMode = true;
@@ -190,8 +190,8 @@ class Universe extends World with DragCallbacks {
     }
     for (final planet in planets) {
       final Type invadorType;
-      int threshold = 0;
-      int invadorForce = (planet.fire_population - planet.ice_population);
+      const threshold = 0;
+      var invadorForce = planet.firePopulation - planet.icePopulation;
       if (invadorForce > 0) {
         invadorType = FirePlanet;
       } else {
@@ -217,20 +217,33 @@ class Universe extends World with DragCallbacks {
       }
     }
   }
+
   void newPlanet(Type planetType, Planet old, int population) {
     switch (planetType) {
       case FirePlanet:
-        print("adding fire planet $population ${old.position}");
-        add(FirePlanet(population: population,
-                       position: old.position,));
+        print('adding fire planet $population ${old.position}');
+        add(
+          FirePlanet(
+            population: population,
+            position: old.position,
+          ),
+        );
       case IcePlanet:
-        print("adding fire planet");
-        add(IcePlanet(population: population,
-                      position: old.position,));
+        print('adding fire planet');
+        add(
+          IcePlanet(
+            population: population,
+            position: old.position,
+          ),
+        );
       case NeutralPlanet:
-        print("adding fire planet");
-        add(NeutralPlanet(population: population,
-                          position: old.position,));
+        print('adding fire planet');
+        add(
+          NeutralPlanet(
+            population: population,
+            position: old.position,
+          ),
+        );
     }
     old.removeFromParent();
   }
