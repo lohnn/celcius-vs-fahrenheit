@@ -221,8 +221,10 @@ class Universe extends World with DragCallbacks {
       }
     }
     for (final (old, newP) in newPlanets) {
-      old.removeFromParent();
-      add(newP);
+      old.explode(() {
+        old.removeFromParent();
+        add(newP);
+      });
     }
 
     for (final planet in planets) {

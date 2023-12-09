@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
@@ -10,7 +11,7 @@ enum AnimationState {
 //  shooting,
 //  growing,
 //  hit,
-//  dying,
+  dying,
   birthing,
   ;
 }
@@ -63,12 +64,18 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
             amount: 4,
             textureSize: Vector2.all(32),
             stepTime: 0.15,
+            loop: state != AnimationState.dying,
           ),
         ),
     };
   }
 
   void settleArrows() {}
+
+  void explode(void Function() addPlanet) {
+    current = AnimationState.dying;
+    animationTicker?.onComplete = addPlanet;
+  }
 }
 
 interface class FightingPlanets {}
@@ -93,6 +100,7 @@ class FirePlanet extends Planet implements FightingPlanets {
   @override
   Map<AnimationState, String> get animationImages => {
         AnimationState.idle: 'FirePlanet_idle-Sheet.png',
+        AnimationState.dying: 'FirePlanet-explosion.png',
       };
 }
 
