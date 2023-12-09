@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:celsius_vs_fahrenheit/components/universe.dart';
 import 'package:celsius_vs_fahrenheit/handler/audio_handler.dart';
 import 'package:celsius_vs_fahrenheit/screens/end_screen.dart';
@@ -41,27 +39,22 @@ class MyGame extends FlameGame with TapCallbacks {
         );
 
   final audioHandler = AudioHandler();
-  bool loosingState = false;
-  bool winningState = false;
-  bool lost = false;
-  bool won = false;
 
   void restart() {
     world = Universe();
     overlays.clear();
   }
 
-  @override
-  Future<void> update(double dt) async {
-    super.update(dt);
-    if (winningState && !won) {
-      await audioHandler.stopBackgroundMusic();
-      await audioHandler.playWinning();
-      won = true;
+  Future<void> setEndCondition({required bool didWin}) async {
+    await audioHandler.stopBackgroundMusic();
+    await audioHandler.playWinning();
 
-      overlays.add('won');
-    }
-    super.update(dt);
+    overlays.add(
+      switch (didWin) {
+        true => 'won',
+        false => 'lost',
+      },
+    );
   }
 
   @override

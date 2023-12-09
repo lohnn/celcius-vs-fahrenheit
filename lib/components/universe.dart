@@ -8,10 +8,8 @@ import 'package:celsius_vs_fahrenheit/main.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/extensions.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
-import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
 class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
@@ -173,19 +171,10 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   }
 
   void checkGameConditions() {
-    int firePlanets = 0;
-    int icePlanets = 0;
-    for (final planet in planets) {
-      if (planet.runtimeType == FirePlanet) {
-        firePlanets++;
-      } else if (planet.runtimeType == IcePlanet) {
-        icePlanets++;
-      }
-    }
-    if (icePlanets == 0) {
-      gameRef.winningState = true;
-    } else if (firePlanets == 0) {
-      gameRef.loosingState = true;
+    if (planets.whereType<IcePlanet>().isEmpty) {
+      gameRef.setEndCondition(didWin: true);
+    } else if (planets.whereType<FirePlanet>().isEmpty) {
+      gameRef.setEndCondition(didWin: false);
     }
   }
 
