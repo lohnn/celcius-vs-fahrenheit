@@ -1,7 +1,7 @@
+import 'package:celsius_vs_fahrenheit/components/universe.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:celsius_vs_fahrenheit/components/universe.dart';
 
 void main() {
   runApp(GameWidget(game: MyGame()));

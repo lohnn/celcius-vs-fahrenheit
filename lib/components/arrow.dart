@@ -18,8 +18,8 @@ class Arrow extends Component {
     final delta = toPos - fromPos;
     final scale = log(delta.length) * 4;
     final unitvector = delta.normalized();
-    Matrix2 rotationMat1 = Matrix2.rotation(45 * (pi / 180));
-    Matrix2 rotationMat2 = Matrix2.rotation(-45 * (pi / 180));
+    final rotationMat1 = Matrix2.rotation(45 * (pi / 180));
+    final rotationMat2 = Matrix2.rotation(-45 * (pi / 180));
 
     final rotated1 = rotationMat1.transformed(unitvector);
     final point1 = rotated1.scaled(scale);

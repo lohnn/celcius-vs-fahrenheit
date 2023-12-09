@@ -1,7 +1,7 @@
-import 'package:flame/components.dart';
-import 'package:flame/events.dart';
 import 'package:celsius_vs_fahrenheit/components/arrow.dart';
 import 'package:celsius_vs_fahrenheit/components/planet.dart';
+import 'package:flame/components.dart';
+import 'package:flame/events.dart';
 
 class Universe extends World with DragCallbacks {
   late final List<Planet> planets;
@@ -17,7 +17,9 @@ class Universe extends World with DragCallbacks {
   @override
   void onDragStart(DragStartEvent event) {
     super.onDragStart(event);
-    if (currentArrow != null) return;
+    if (currentArrow != null) {
+      return;
+    }
     if (componentsAtPoint(event.localPosition)
             .whereType<FirePlanet>()
             .firstOrNull
