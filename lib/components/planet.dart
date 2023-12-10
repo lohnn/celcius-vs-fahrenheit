@@ -35,7 +35,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     final radius = sqrt(newValueClamp / pi);
     final effect = SizeEffect.to(
       Vector2(radius, radius) * 7,
-      EffectController(duration: 1),
+      EffectController(duration: 0.5),
     );
     add(effect);
     _population = newValueClamp;
@@ -96,7 +96,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
       SpriteAnimationData.sequenced(
         amount: 6,
         textureSize: Vector2.all(32),
-        stepTime: 0.3,
+        stepTime: 0.15,
         loop: false,
       ),
     );

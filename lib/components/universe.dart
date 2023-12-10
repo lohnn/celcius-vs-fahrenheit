@@ -21,6 +21,7 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   AdvancedButtonComponent? endTurnButton;
 
   int waitFor = 0;
+  int waitForExplosions = 0;
 
   void clearDrag() {
     currentArrow = null;
@@ -184,15 +185,27 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
     }
   }
 
+  void explosionFinished() {
+    waitForExplosions = waitForExplosions - 1;
+    if (waitForExplosions == 0) {
+      // Future, s.t. we get updated planet list
+      Future.delayed(const Duration(milliseconds: 10), finishTurn);
+    }
+  }
+
   void checkGameConditions() {
     final isPlanetsEmpty = planets.whereType<IcePlanet>().isEmpty;
     final firePlanetsEmpty = planets.whereType<FirePlanet>().isEmpty;
 
     if (isPlanetsEmpty) {
+      print("game end!");
       gameRef.setEndCondition(didWin: true);
     } else if (firePlanetsEmpty) {
+      print("game end!");
       gameRef.setEndCondition(didWin: false);
     } else if (isPlanetsEmpty && firePlanetsEmpty) {
+      print("game end!");
+
       gameRef.setEndCondition(didWin: null);
     }
   }
@@ -283,6 +296,7 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   }
 
   void handlePlanets() {
+    int nExplosions = 0;
     for (final planet in planets) {
       const threshold = 5;
       const growthRate = 1.25;
@@ -320,8 +334,10 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
       }
 
       if (newP != null) {
+        nExplosions = nExplosions + 1;
         planet.explode(() {
           planet.removeFromParent();
+          explosionFinished();
           add(newP!);
         });
       }
@@ -333,14 +349,16 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
       planet.icePopulation = 0;
       planet.firePopulation = 0;
     }
-    Future.delayed(const Duration(milliseconds: 1500), finishTurn);
+    if (nExplosions == 0) {
+      finishTurn();
+    } else {
+      waitForExplosions = nExplosions;
+    }
   }
 
   void finishTurn() {
     checkGameConditions();
     endTurnButton!.isDisabled = false;
-
-    // reenableButton();
   }
 
   Planet newPlanet(Type planetType, Planet old, int population0) {

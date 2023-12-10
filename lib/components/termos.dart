@@ -15,8 +15,6 @@ class Termos extends SpriteComponent {
     required this.onTravelComplete,
   });
 
-  
-
   @override
   Future<void> onLoad() async {
     super.onLoad();
@@ -25,17 +23,16 @@ class Termos extends SpriteComponent {
     size = Vector2(8, 8);
     position = fromPos;
     lookAt(toPos);
-    angle = angle + pi/2;
-    add(MoveToEffect(
-      toPos,
-      EffectController(duration: 2),
-      onComplete: () {
-        removeFromParent();
-        onTravelComplete();
-      },
-    ),);
+    angle = angle + pi / 2;
+    add(
+      MoveToEffect(
+        toPos,
+        EffectController(duration: 1),
+        onComplete: () {
+          removeFromParent();
+          onTravelComplete();
+        },
+      ),
+    );
   }
-
-  
-
 }
