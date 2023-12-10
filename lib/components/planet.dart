@@ -36,7 +36,6 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   set population(int newValue) {
     final newValueClamp = min(newValue, 500);
     final radius = sqrt(newValueClamp / pi);
-    debugPrint('p: $newValueClamp, r: $radius');
 
     // If we already are in the process of growing, let's cancel it now!
     _currentGrowingEffect?.removeFromParent();
