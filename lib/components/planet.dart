@@ -8,6 +8,7 @@ import 'package:celsius_vs_fahrenheit/main.dart';
 import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/extensions.dart';
+import 'package:flutter/cupertino.dart';
 
 enum AnimationState {
   idle,
@@ -30,14 +31,27 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
 
   void Function()? continuationFun;
 
+  SizeEffect? _currentGrowingEffect;
+
   set population(int newValue) {
     final newValueClamp = min(newValue, 500);
     final radius = sqrt(newValueClamp / pi);
+    debugPrint('p: $newValueClamp, r: $radius');
+
+    // If we already are in the process of growing, let's cancel it now!
+    _currentGrowingEffect?.removeFromParent();
+    _currentGrowingEffect = null;
+
+    // size = Vector2(radius, radius) * 7;
     final effect = SizeEffect.to(
       Vector2(radius, radius) * 7,
       EffectController(duration: 0.5),
+      onComplete: () {
+        _currentGrowingEffect = null;
+      },
     );
     add(effect);
+    _currentGrowingEffect = effect;
     _population = newValueClamp;
   }
 
@@ -66,7 +80,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
   }
 
   @override
-  bool get debugMode => true;
+  bool get debugMode => false;
 
   @override
   void renderDebugMode(Canvas canvas) {
@@ -74,7 +88,12 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     debugTextPaint.render(
       canvas,
       'p: $population',
-      Vector2(-10, 15),
+      Vector2(width, height / 2),
+    );
+    debugTextPaint.render(
+      canvas,
+      'r: ${width / 2}',
+      Vector2(width, height / 2 + 10),
     );
   }
 
@@ -83,7 +102,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
     super.onLoad();
     population = population;
 
-    final SpriteAnimation idle = await game.loadSpriteAnimation(
+    final idle = await game.loadSpriteAnimation(
       animationImages[AnimationState.idle]!,
       SpriteAnimationData.sequenced(
         amount: 4,
@@ -91,7 +110,7 @@ sealed class Planet extends SpriteAnimationGroupComponent<AnimationState>
         stepTime: 0.3,
       ),
     );
-    final SpriteAnimation dying = await game.loadSpriteAnimation(
+    final dying = await game.loadSpriteAnimation(
       animationImages[AnimationState.dying]!,
       SpriteAnimationData.sequenced(
         amount: 6,

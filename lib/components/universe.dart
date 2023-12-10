@@ -8,7 +8,6 @@ import 'package:celsius_vs_fahrenheit/main.dart';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flame/extensions.dart';
-import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flutter/material.dart';
 
@@ -292,13 +291,13 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   }
 
   void handlePlanets() {
-    int nExplosions = 0;
+    var nExplosions = 0;
     for (final planet in planets) {
       const threshold = 5;
       const growthRate = 1.25;
 
       final Type invadorType;
-      Planet? newP = null;
+      Planet? newP;
 
       var invadorForce = planet.firePopulation - planet.icePopulation;
       if (invadorForce > 0) {
@@ -359,8 +358,8 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   }
 
   Planet newPlanet(Type planetType, Planet old, int population0) {
-    int population = max(population0, 15);
-    Vector2 position = old.position;
+    final int population = max(population0, 15);
+    final Vector2 position = old.position;
 
     return switch (planetType) {
       FirePlanet => FirePlanet(
