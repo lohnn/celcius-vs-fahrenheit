@@ -18,7 +18,7 @@ class Termos extends SpriteComponent {
   @override
   Future<void> onLoad() async {
     super.onLoad();
-    final image = await Flame.images.load('Termos-grön.png');
+    final image = await Flame.images.load('Thermos-green.png');
     sprite = Sprite(image);
     size = Vector2(8, 8);
     position = fromPos;
