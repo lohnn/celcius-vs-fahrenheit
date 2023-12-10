@@ -189,7 +189,7 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
     waitForExplosions = waitForExplosions - 1;
     if (waitForExplosions == 0) {
       // Future, s.t. we get updated planet list
-      Future.delayed(const Duration(milliseconds: 10), finishTurn);
+      Future.delayed(const Duration(milliseconds: 100), finishTurn);
     }
   }
 
@@ -198,14 +198,10 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
     final firePlanetsEmpty = planets.whereType<FirePlanet>().isEmpty;
 
     if (isPlanetsEmpty) {
-      print("game end!");
       gameRef.setEndCondition(didWin: true);
     } else if (firePlanetsEmpty) {
-      print("game end!");
       gameRef.setEndCondition(didWin: false);
     } else if (isPlanetsEmpty && firePlanetsEmpty) {
-      print("game end!");
-
       gameRef.setEndCondition(didWin: null);
     }
   }
@@ -337,8 +333,8 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
         nExplosions = nExplosions + 1;
         planet.explode(() {
           planet.removeFromParent();
-          explosionFinished();
           add(newP!);
+          explosionFinished();
         });
       }
 
@@ -350,7 +346,8 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
       planet.firePopulation = 0;
     }
     if (nExplosions == 0) {
-      finishTurn();
+      // there's always growth, so wait a bit before finishing
+      Future.delayed(const Duration(milliseconds: 500), finishTurn);
     } else {
       waitForExplosions = nExplosions;
     }

@@ -51,7 +51,6 @@ class MyGame extends FlameGame with TapCallbacks {
   Future<void> setEndCondition({required bool? didWin}) async {
     await audioHandler.stopBackgroundMusic();
     await audioHandler.playWinning();
-
     overlays.add(
       switch (didWin) {
         true => 'won',
