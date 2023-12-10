@@ -196,12 +196,12 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
     final isPlanetsEmpty = planets.whereType<IcePlanet>().isEmpty;
     final firePlanetsEmpty = planets.whereType<FirePlanet>().isEmpty;
 
-    if (isPlanetsEmpty) {
+    if (isPlanetsEmpty && firePlanetsEmpty) {
+      gameRef.setEndCondition(didWin: null);
+    } else if (isPlanetsEmpty) {
       gameRef.setEndCondition(didWin: true);
     } else if (firePlanetsEmpty) {
       gameRef.setEndCondition(didWin: false);
-    } else if (isPlanetsEmpty && firePlanetsEmpty) {
-      gameRef.setEndCondition(didWin: null);
     }
   }
 
