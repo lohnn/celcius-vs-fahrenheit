@@ -18,6 +18,8 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   ({Arrow arrow, FirePlanet fromPlanet})? currentArrow;
   Planet? currentToPlanet;
 
+  AdvancedButtonComponent? endTurnButton;
+
   int waitFor = 0;
 
   void clearDrag() {
@@ -130,6 +132,16 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
       ),
     ].forEach(add);
 
+    endTurnButton = AdvancedButtonComponent(
+      defaultSkin: EndTurnButton(),
+      disabledSkin: EndTurnButton(isDown: true),
+//      defau: EndTurnButton(isDown: true),
+      onPressed: triggerNextTurn,
+      size: Vector2(120, 50),
+      position: Vector2(-190, 190),
+      anchor: Anchor.bottomLeft,
+    );
+
     addAll([
       RectangleComponent(
         position: Vector2(-200, 200),
@@ -137,14 +149,7 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
         size: Vector2(120, 66),
         paint: Paint()..color = Colors.black.withOpacity(1.0),
       ),
-      ButtonComponent(
-        button: EndTurnButton(),
-        buttonDown: EndTurnButton(isDown: true),
-        onPressed: triggerNextTurn,
-        size: Vector2(120, 50),
-        position: Vector2(-190, 190),
-        anchor: Anchor.bottomLeft,
-      ),
+      endTurnButton!,
     ]);
 
     for (var i = 0; i < 100; i++) {
@@ -266,11 +271,12 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
   }
 
   void triggerNextTurn() {
+    endTurnButton!.isDisabled = true;
+
     setIceMoves();
     for (final planet in planets) {
       planet.settleArrows();
     }
-    print("waiting for $waitFor");
     if (waitFor == 0) {
       handlePlanets();
     }
@@ -326,8 +332,15 @@ class Universe extends World with DragCallbacks, HasGameRef<MyGame> {
       planet.targetPlanets.clear();
       planet.icePopulation = 0;
       planet.firePopulation = 0;
-      checkGameConditions();
     }
+    Future.delayed(const Duration(milliseconds: 1500), finishTurn);
+  }
+
+  void finishTurn() {
+    checkGameConditions();
+    endTurnButton!.isDisabled = false;
+
+    // reenableButton();
   }
 
   Planet newPlanet(Type planetType, Planet old, int population0) {
